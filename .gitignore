@@ -1,0 +1,97 @@
+# =========================
+# CMake build outputs
+# =========================
+
+# ignore build folders and all contents
+/build/*
+/Build/*
+/out/*
+/bin/*
+/lib/*
+
+# keep the folders so structure remains
+!/build/.gitkeep
+!/Build/.gitkeep
+!/out/.gitkeep
+!/bin/.gitkeep
+!/lib/.gitkeep
+
+# Ignore compiled binaries and intermediate files
+*.o
+*.so
+*.a
+*.dll
+*.exe
+*.elf
+*.map
+
+# =========================
+# CMake internal files
+# =========================
+CMakeFiles/
+CMakeCache.txt
+cmake_install.cmake
+compile_commands.json
+Makefile
+*.cmake
+CMakeScripts/
+
+# Ninja / Make
+.ninja_deps
+.ninja_log
+
+# =========================
+# IDE / Editor
+# =========================
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# =========================
+# OS files
+# =========================
+.DS_Store
+Thumbs.db
+
+# =========================
+# KiCad cache & temp files
+# =========================
+fp-info-cache
+*-backups/
+
+# Auto-save, lock, temporary
+*.kicad_pcb-bak
+*.kicad_sch-bak
+*.lck
+*.tmp
+*~
+
+# =========================
+# KiCad fabrication outputs
+# =========================
+# ignore production files generated from the PCB
+/fabrication/*
+!/fabrication/.gitkeep
+
+# =========================
+# CAD export folder (only track desired models)
+# =========================
+
+# Whitelist the exports folder and specific model files
+!/exports/
+!/exports/*.step
+!/exports/*.stl
+!/exports/*.obj
+
+# =========================
+# Logs & debugging
+# =========================
+*.log
+
+# =========================
+# Python (if build scripts)
+# =========================
+__pycache__/
+*.pyc
