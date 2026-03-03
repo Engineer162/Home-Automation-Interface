@@ -2,12 +2,14 @@
 # CMake build outputs
 # =========================
 
-# ignore build folders and all contents
+# ignore build folders and all contents (root and subdirectories)
 /build/*
 /Build/*
 /out/*
 /bin/*
 /lib/*
+/software/build/*
+/software/Build/*
 
 # keep the folders so structure remains
 !/build/.gitkeep
@@ -15,6 +17,7 @@
 !/out/.gitkeep
 !/bin/.gitkeep
 !/lib/.gitkeep
+!/software/build/.gitkeep
 
 # Ignore compiled binaries and intermediate files
 *.o
@@ -32,6 +35,7 @@ CMakeFiles/
 CMakeCache.txt
 cmake_install.cmake
 compile_commands.json
+CMakeUserPresets.json
 Makefile
 *.cmake
 CMakeScripts/
