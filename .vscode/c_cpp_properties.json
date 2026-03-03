@@ -1,0 +1,13 @@
+{
+  "configurations": [
+    {
+      "name": "Win32",
+      "compilerPath": "C:/Strawberry/c/bin/g++.exe",
+      "intelliSenseMode": "windows-gcc-x64",
+      "cStandard": "c17",
+      "cppStandard": "c++20",
+      "compileCommands": "${workspaceFolder}/software/build/windows-msvc/compile_commands.json"
+    }
+  ],
+  "version": 4
+}

@@ -13,6 +13,10 @@
 #include "backends/imgui_impl_sdl2.h"
 #include "backends/imgui_impl_vulkan.h"
 
+#include "ui_window.h"
+#include "windows/status_window.h"
+#include "windows/system_overview_window.h"
+
 namespace
 {
 constexpr int kWindowWidth = 1280;
@@ -280,6 +284,33 @@ void FramePresent(ImGui_ImplVulkanH_Window* wd)
     wd->SemaphoreIndex = (wd->SemaphoreIndex + 1) % wd->ImageCount;
 }
 
+void RenderDockSpace()
+{
+    const ImGuiViewport* viewport = ImGui::GetMainViewport();
+    ImGui::SetNextWindowPos(viewport->WorkPos);
+    ImGui::SetNextWindowSize(viewport->WorkSize);
+    ImGui::SetNextWindowViewport(viewport->ID);
+
+    ImGuiWindowFlags host_window_flags = ImGuiWindowFlags_NoDocking;
+    host_window_flags |= ImGuiWindowFlags_NoTitleBar;
+    host_window_flags |= ImGuiWindowFlags_NoCollapse;
+    host_window_flags |= ImGuiWindowFlags_NoResize;
+    host_window_flags |= ImGuiWindowFlags_NoMove;
+    host_window_flags |= ImGuiWindowFlags_NoBringToFrontOnFocus;
+    host_window_flags |= ImGuiWindowFlags_NoNavFocus;
+    host_window_flags |= ImGuiWindowFlags_NoBackground;
+
+    ImGui::PushStyleVar(ImGuiStyleVar_WindowRounding, 0.0F);
+    ImGui::PushStyleVar(ImGuiStyleVar_WindowBorderSize, 0.0F);
+    ImGui::PushStyleVar(ImGuiStyleVar_WindowPadding, ImVec2(0.0F, 0.0F));
+    ImGui::Begin("MainDockSpace", nullptr, host_window_flags);
+    ImGui::PopStyleVar(3);
+
+    const ImGuiID dockspace_id = ImGui::GetID("HomeAutomationDockSpace");
+    ImGui::DockSpace(dockspace_id, ImVec2(0.0F, 0.0F), ImGuiDockNodeFlags_PassthruCentralNode);
+    ImGui::End();
+}
+
 }  // namespace
 
 int main(int, char**)
@@ -319,6 +350,7 @@ int main(int, char**)
         ImGui::CreateContext();
         ImGuiIO& io = ImGui::GetIO();
         io.ConfigFlags |= ImGuiConfigFlags_NavEnableKeyboard;
+        io.ConfigFlags |= ImGuiConfigFlags_DockingEnable;
 
         ImGui::StyleColorsDark();
 
@@ -344,6 +376,12 @@ int main(int, char**)
         ImGui_ImplVulkan_CreateFontsTexture();
         CheckVkResult(vkDeviceWaitIdle(g_device));
         ImGui_ImplVulkan_DestroyFontsTexture();
+
+                // Here we create the windows that will be rendered in the main loop.
+                const std::vector<UiWindow> ui_windows = {
+                    CreateSystemOverviewWindow(),
+                    CreateStatusWindow(),
+                };
 
         bool done = false;
         while (!done)
@@ -391,13 +429,19 @@ int main(int, char**)
             ImGui_ImplSDL2_NewFrame();
             ImGui::NewFrame();
 
-            ImGui::Begin("System Overview");
-            ImGui::Text("Home automation interface is running.");
-            ImGui::Separator();
-            ImGui::Text("Platform: %s", SDL_GetPlatform());
-            ImGui::Text("Display size: %d x %d", framebuffer_w, framebuffer_h);
-            ImGui::Text("Application average %.3f ms/frame (%.1f FPS)", 1000.0F / io.Framerate, io.Framerate);
-            ImGui::End();
+            RenderDockSpace();
+
+                        const UiFrameContext frame_context{
+                            .platform = SDL_GetPlatform(),
+                            .framebuffer_width = framebuffer_w,
+                            .framebuffer_height = framebuffer_h,
+                            .framerate = io.Framerate,
+                        };
+
+                        for (const UiWindow& ui_window : ui_windows)
+                        {
+                                ui_window.render(frame_context);
+                        }
 
             ImGui::Render();
             ImDrawData* draw_data = ImGui::GetDrawData();

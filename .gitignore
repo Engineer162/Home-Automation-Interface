@@ -47,7 +47,6 @@ CMakeScripts/
 # =========================
 # IDE / Editor
 # =========================
-.vscode/
 .idea/
 *.swp
 *.swo

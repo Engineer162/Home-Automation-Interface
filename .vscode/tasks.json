@@ -1,0 +1,154 @@
+{
+  "version": "2.0.0",
+  "tasks": [
+    {
+      "label": "cmake: configure windows",
+      "type": "shell",
+      "command": "cmake",
+      "args": [
+        "--preset",
+        "windows-msvc"
+      ],
+      "options": {
+        "cwd": "${workspaceFolder}/software"
+      },
+      "problemMatcher": [
+        "$gcc"
+      ],
+      "group": {
+        "kind": "build",
+        "isDefault": false
+      },
+      "presentation": {
+        "reveal": "always",
+        "panel": "shared"
+      }
+    },
+    {
+      "label": "cmake: configure aarch64",
+      "type": "shell",
+      "command": "cmake",
+      "args": [
+        "--preset",
+        "rpi4-aarch64",
+        "-DRPI_SYSROOT=${input:rpiSysroot}"
+      ],
+      "options": {
+        "cwd": "${workspaceFolder}/software"
+      },
+      "problemMatcher": [
+        "$gcc"
+      ],
+      "group": {
+        "kind": "build",
+        "isDefault": false
+      },
+      "presentation": {
+        "reveal": "always",
+        "panel": "shared"
+      }
+    },
+    {
+      "label": "cmake: configure rpi4 native",
+      "type": "shell",
+      "command": "cmake",
+      "args": [
+        "--preset",
+        "rpi4-native"
+      ],
+      "options": {
+        "cwd": "${workspaceFolder}/software"
+      },
+      "problemMatcher": [
+        "$gcc"
+      ],
+      "group": {
+        "kind": "build",
+        "isDefault": false
+      },
+      "presentation": {
+        "reveal": "always",
+        "panel": "shared"
+      }
+    },
+    {
+      "label": "cmake: build windows",
+      "type": "shell",
+      "command": "cmake",
+      "args": [
+        "--build",
+        "--preset",
+        "build-windows-msvc"
+      ],
+      "options": {
+        "cwd": "${workspaceFolder}/software"
+      },
+      "problemMatcher": [
+        "$gcc"
+      ],
+      "group": {
+        "kind": "build",
+        "isDefault": false
+      },
+      "presentation": {
+        "reveal": "always",
+        "panel": "shared"
+      }
+    },
+    {
+      "label": "cmake: build aarch64",
+      "type": "shell",
+      "command": "cmake",
+      "args": [
+        "--build",
+        "--preset",
+        "build-rpi4-aarch64"
+      ],
+      "options": {
+        "cwd": "${workspaceFolder}/software"
+      },
+      "problemMatcher": [
+        "$gcc"
+      ],
+      "group": {
+        "kind": "build",
+        "isDefault": false
+      },
+      "presentation": {
+        "reveal": "always",
+        "panel": "shared"
+      }
+    },
+    {
+      "label": "cmake: build rpi4 native",
+      "type": "shell",
+      "command": "cmake",
+      "args": [
+        "--build",
+        "--preset",
+        "build-rpi4-native"
+      ],
+      "options": {
+        "cwd": "${workspaceFolder}/software"
+      },
+      "problemMatcher": [
+        "$gcc"
+      ],
+      "group": {
+        "kind": "build",
+        "isDefault": false
+      },
+      "presentation": {
+        "reveal": "always",
+        "panel": "shared"
+      }
+    }
+  ],
+  "inputs": [
+    {
+      "id": "rpiSysroot",
+      "type": "promptString",
+      "description": "Path to Raspberry Pi sysroot (leave empty for none)"
+    }
+  ]
+}
