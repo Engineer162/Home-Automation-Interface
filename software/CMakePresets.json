@@ -31,6 +31,21 @@
         "CMAKE_TOOLCHAIN_FILE": "${sourceDir}/cmake/toolchains/rpi4-aarch64.cmake",
         "HAI_FETCH_DEPS": "ON"
       }
+    },
+    {
+      "name": "rpi4-native",
+      "displayName": "Raspberry Pi 4 (native Linux)",
+      "generator": "Ninja",
+      "binaryDir": "${sourceDir}/build/rpi4-native",
+      "cacheVariables": {
+        "CMAKE_BUILD_TYPE": "Release",
+        "HAI_FETCH_DEPS": "ON"
+      },
+      "condition": {
+        "type": "equals",
+        "lhs": "${hostSystemName}",
+        "rhs": "Linux"
+      }
     }
   ],
   "buildPresets": [
@@ -42,6 +57,11 @@
     {
       "name": "build-rpi4-aarch64",
       "configurePreset": "rpi4-aarch64",
+      "configuration": "Release"
+    },
+    {
+      "name": "build-rpi4-native",
+      "configurePreset": "rpi4-native",
       "configuration": "Release"
     }
   ]
