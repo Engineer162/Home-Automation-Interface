@@ -40,11 +40,6 @@
       "cacheVariables": {
         "CMAKE_BUILD_TYPE": "Release",
         "HAI_FETCH_DEPS": "ON"
-      },
-      "condition": {
-        "type": "equals",
-        "lhs": "${hostSystemName}",
-        "rhs": "Linux"
       }
     }
   ],
