@@ -60,6 +60,23 @@ set(IMGUI_SOURCES
   ${IMGUI_DIR}/backends/imgui_impl_vulkan.cpp
 )
 
+FetchContent_Declare(
+  stb
+  GIT_REPOSITORY https://github.com/nothings/stb.git
+  GIT_TAG master
+  GIT_SHALLOW TRUE
+)
+FetchContent_GetProperties(stb)
+if(NOT stb_POPULATED)
+  FetchContent_MakeAvailable(stb)
+endif()
+
+if(NOT TARGET stb::stb)
+  add_library(stb INTERFACE)
+  add_library(stb::stb ALIAS stb)
+  target_include_directories(stb INTERFACE ${stb_SOURCE_DIR})
+endif()
+
 file(GLOB APP_WINDOW_SOURCES CONFIGURE_DEPENDS
   ${CMAKE_CURRENT_SOURCE_DIR}/windows/*.cpp
 )
@@ -67,6 +84,7 @@ file(GLOB APP_WINDOW_SOURCES CONFIGURE_DEPENDS
 add_executable(home_automation_interface
   main.cpp
   ${APP_WINDOW_SOURCES}
+  windows/image_loader/image_loader.cpp
   ${IMGUI_SOURCES}
 )
 
@@ -81,6 +99,7 @@ target_include_directories(home_automation_interface PRIVATE
 target_link_libraries(home_automation_interface PRIVATE
   SDL2::SDL2
   Vulkan::Vulkan
+  stb::stb
 )
 
 target_compile_definitions(home_automation_interface PRIVATE

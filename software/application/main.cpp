@@ -16,12 +16,14 @@
 #include "ui_window.h"
 #include "windows/status_window.h"
 #include "windows/system_overview_window.h"
+#include "windows/radar_window.h"
 
 namespace
 {
-constexpr int kWindowWidth = 1280;
-constexpr int kWindowHeight = 720;
+constexpr int kWindowWidth = 800;
+constexpr int kWindowHeight = 480;
 constexpr int kMinImageCount = 2;
+constexpr int kFrameCapFps = 60;
 
 VkAllocationCallbacks* g_allocator = nullptr;
 VkInstance g_instance = VK_NULL_HANDLE;
@@ -381,11 +383,14 @@ int main(int, char**)
                 const std::vector<UiWindow> ui_windows = {
                     CreateSystemOverviewWindow(),
                     CreateStatusWindow(),
+                    CreateRadarWindow(),
                 };
 
         bool done = false;
         while (!done)
         {
+            const Uint64 frame_start_ticks = SDL_GetTicks64();
+
             SDL_Event event;
             while (SDL_PollEvent(&event))
             {
@@ -436,6 +441,11 @@ int main(int, char**)
                             .framebuffer_width = framebuffer_w,
                             .framebuffer_height = framebuffer_h,
                             .framerate = io.Framerate,
+                            .vulkan_physical_device = g_physical_device,
+                            .vulkan_device = g_device,
+                            .vulkan_queue = g_graphics_queue,
+                            .vulkan_command_pool = g_main_window_data.Frames[g_main_window_data.FrameIndex].CommandPool,
+                            .vulkan_allocator = g_allocator,
                         };
 
                         for (const UiWindow& ui_window : ui_windows)
@@ -450,6 +460,16 @@ int main(int, char**)
             {
                 FrameRender(&g_main_window_data, draw_data);
                 FramePresent(&g_main_window_data);
+            }
+
+            if (kFrameCapFps > 0)
+            {
+                const Uint64 frame_target_ms = 1000ULL / static_cast<Uint64>(kFrameCapFps);
+                const Uint64 frame_elapsed_ms = SDL_GetTicks64() - frame_start_ticks;
+                if (frame_elapsed_ms < frame_target_ms)
+                {
+                    SDL_Delay(static_cast<Uint32>(frame_target_ms - frame_elapsed_ms));
+                }
             }
         }
 
